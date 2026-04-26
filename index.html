@@ -4,26 +4,41 @@
   <meta charset="UTF-8" />
   <title>사주전쟁</title>
   <style>
-    body{margin:0;background:#0b0b0b;color:#f7f1df;font-family:Arial,sans-serif;padding:24px}
-    .app{max-width:850px;margin:auto}
-    .box{background:#171717;border:1px solid #8a6a18;border-radius:18px;padding:24px;margin:18px 0}
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(circle at top,#1b1b1b,#070707 70%);color:#f7f1df;font-family:Arial,"Noto Sans KR",sans-serif;padding:24px}
+    .app{max-width:920px;margin:auto}
+    .box{background:linear-gradient(145deg,#1b1b1b,#101010);border:1px solid rgba(212,175,55,.55);border-radius:22px;padding:26px;margin:20px 0;box-shadow:0 0 32px rgba(212,175,55,.08)}
+    .hero{text-align:center;padding:44px 24px}
     h1,h2,h3{color:#d4af37}
-    input,select,button{width:100%;padding:14px;margin:7px 0;border-radius:12px;border:1px solid #8a6a18;box-sizing:border-box}
-    input,select{background:#0e0e0e;color:#fff}
-    button{background:linear-gradient(135deg,#d4af37,#f4dc8a);font-weight:800;cursor:pointer}
-    button.secondary{background:#2a2a2a;color:#d4af37}
+    h1{font-size:38px;margin:0 0 14px}
+    input,select,button{width:100%;padding:15px;margin:7px 0;border-radius:13px;border:1px solid rgba(212,175,55,.45);box-sizing:border-box;font-size:16px}
+    input,select{background:#0d0d0d;color:#fff}
+    button{background:linear-gradient(135deg,#d4af37,#f4dc8a);font-weight:900;cursor:pointer;color:#111;border:none}
+    button.secondary{background:#2b2b2b;color:#d4af37;border:1px solid rgba(212,175,55,.5)}
     .row{display:flex;gap:10px}
-    .report{white-space:pre-wrap;line-height:1.9}
-    .lock{text-align:center;color:#f4dc8a;font-weight:800}
-    .manse{width:100%;border-collapse:collapse;text-align:center}
-    .manse td,.manse th{border:1px solid #8a6a18;padding:12px}
-    .big{font-size:30px;font-weight:900;color:#f4dc8a}
-    @media(max-width:700px){.row{flex-direction:column}}
+    .section-title{font-size:25px;border-bottom:1px solid rgba(212,175,55,.25);padding-bottom:12px;margin-bottom:18px}
+    .report{white-space:pre-wrap;line-height:1.95;font-size:16px}
+    .lock{text-align:center;color:#f4dc8a;font-weight:900;line-height:1.8}
+
+    .manse{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed;text-align:center;overflow:hidden;border-radius:16px;border:1px solid rgba(212,175,55,.55)}
+    .manse th,.manse td{border-right:1px solid rgba(212,175,55,.35);border-bottom:1px solid rgba(212,175,55,.25);padding:14px 8px}
+    .manse th:last-child,.manse td:last-child{border-right:none}
+    .manse tr:last-child td{border-bottom:none}
+    .label{width:78px;color:#c8b98a;background:rgba(212,175,55,.08);font-weight:800}
+    .gan{font-size:40px;font-weight:900;color:#ffe48a}
+    .ji{font-size:38px;font-weight:900;color:#e4c764}
+    .hidden{font-size:15px;line-height:1.6;color:#d8c48a;letter-spacing:1px}
+
+    .battle-card{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.35);border-radius:18px;padding:20px;margin-top:18px}
+    .battle-title{color:#f4dc8a;font-weight:900;font-size:18px;margin-bottom:10px}
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#2a2412;color:#ffe48a;border:1px solid rgba(212,175,55,.4);font-size:13px;margin:4px}
+    @media(max-width:700px){.row{flex-direction:column}.gan{font-size:30px}.ji{font-size:28px}}
   </style>
 </head>
+
 <body>
 <div class="app">
-  <div class="box" style="text-align:center">
+  <div class="box hero">
     <h1>⚔️ 사주전쟁</h1>
     <p>내 사주 전쟁터 · 병력 구성 · 아이템 해금 시기</p>
   </div>
@@ -53,10 +68,10 @@
 </div>
 
 <script>
-let isPaid = false;
-let lastFullResult = "";
+let isPaid=false;
+let lastFullResult="";
 
-function pad(n){ return String(n).padStart(2,"0"); }
+function pad(n){return String(n).padStart(2,"0")}
 
 function fillOptions(){
   const year=document.getElementById("year");
@@ -79,20 +94,75 @@ function fillOptions(){
 }
 fillOptions();
 
+const hiddenGan = {
+  "子":"癸", "丑":"己·癸·辛", "寅":"甲·丙·戊", "卯":"乙",
+  "辰":"戊·乙·癸", "巳":"丙·戊·庚", "午":"丁·己", "未":"己·丁·乙",
+  "申":"庚·壬·戊", "酉":"辛", "戌":"戊·辛·丁", "亥":"壬·甲",
+  "자":"계", "축":"기·계·신", "인":"갑·병·무", "묘":"을",
+  "진":"무·을·계", "사":"병·무·경", "오":"정·기", "미":"기·정·을",
+  "신":"경·임·무", "유":"신", "술":"무·신·정", "해":"임·갑"
+};
+
+const elementMap = {
+  "甲":"목","乙":"목","丙":"화","丁":"화","戊":"토","己":"토","庚":"금","辛":"금","壬":"수","癸":"수",
+  "갑":"목","을":"목","병":"화","정":"화","무":"토","기":"토","경":"금","신":"금","임":"수","계":"수"
+};
+
+function splitPillar(p){
+  return { gan:p ? p[0] : "-", ji:p ? p[1] : "-" };
+}
+
 function renderPillars(p){
   if(!p) return "";
+
+  const cols = [
+    {label:"년", value:p.year},
+    {label:"월", value:p.month},
+    {label:"일", value:p.day},
+    {label:"시", value:p.hour}
+  ];
+
+  const dayGan = splitPillar(p.day).gan;
+  const dayElement = elementMap[dayGan] || "-";
+
   return `
   <div class="box">
-    <h2>1. 사주팔자 원국표</h2>
+    <h2 class="section-title">1. 사주팔자 원국표</h2>
     <table class="manse">
-      <tr><th></th><th>년</th><th>월</th><th>일</th><th>시</th></tr>
-      <tr><td>간지</td>
-        <td class="big">${p.year || "-"}</td>
-        <td class="big">${p.month || "-"}</td>
-        <td class="big">${p.day || "-"}</td>
-        <td class="big">${p.hour || "-"}</td>
+      <tr>
+        <th class="label"></th>
+        ${cols.map(c=>`<th>${c.label}</th>`).join("")}
+      </tr>
+      <tr>
+        <td class="label">천간</td>
+        ${cols.map(c=>`<td class="gan">${splitPillar(c.value).gan}</td>`).join("")}
+      </tr>
+      <tr>
+        <td class="label">지지</td>
+        ${cols.map(c=>`<td class="ji">${splitPillar(c.value).ji}</td>`).join("")}
+      </tr>
+      <tr>
+        <td class="label">지장간</td>
+        ${cols.map(c=>{
+          const ji=splitPillar(c.value).ji;
+          return `<td class="hidden">${hiddenGan[ji] || "-"}</td>`;
+        }).join("")}
       </tr>
     </table>
+
+    <div class="battle-card">
+      <div class="battle-title">⚔️ 일간 캐릭터</div>
+      <div>
+        이 사주의 주인공은 <strong>${dayGan}</strong> 일간입니다.
+        중심 속성은 <strong>${dayElement}</strong> 기운입니다.
+      </div>
+      <div style="margin-top:12px">
+        <span class="badge">년주 ${p.year}</span>
+        <span class="badge">월주 ${p.month}</span>
+        <span class="badge">일주 ${p.day}</span>
+        <span class="badge">시주 ${p.hour}</span>
+      </div>
+    </div>
   </div>`;
 }
 
@@ -100,7 +170,7 @@ function renderDaewoon(d){
   if(!d || !d.list) return "";
   return `
   <div class="box">
-    <h2>2. 대운 흐름</h2>
+    <h2 class="section-title">2. 대운 흐름</h2>
     <div class="report">${d.startInfo || ""}
 ${d.list.map(x=>`${x.startAge}세~${x.endAge}세: ${x.ganji}대운 (${x.startYear}년~${x.endYear}년)`).join("\n")}</div>
   </div>`;
@@ -157,13 +227,13 @@ async function analyze(){
     }
 
     const report=cleanText(data.result);
-    const preview=report.slice(0,700);
+    const preview=report.slice(0,750);
 
     const fullHTML=`
       ${renderPillars(data.pillars)}
       ${renderDaewoon(data.daewoon)}
       <div class="box">
-        <h2>3. 프리미엄 전투 해석</h2>
+        <h2 class="section-title">3. 프리미엄 전투 해석</h2>
         <div class="report">${report}</div>
       </div>`;
 
@@ -171,7 +241,7 @@ async function analyze(){
       ${renderPillars(data.pillars)}
       ${renderDaewoon(data.daewoon)}
       <div class="box">
-        <h2>무료 미리보기</h2>
+        <h2 class="section-title">무료 미리보기</h2>
         <div class="report">${preview}...</div>
       </div>
       <div class="box lock">🔒 숨겨진 아이템과 전체 전투 전략은 결제 후 확인 가능합니다.</div>`;
