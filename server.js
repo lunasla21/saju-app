@@ -3,8 +3,6 @@ const cors = require("cors");
 const path = require("path");
 require("dotenv").config();
 
-const fetch = require("node-fetch"); // ✅ 추가 (이게 핵심)
-
 const OpenAI = require("openai");
 const { Solar, Lunar } = require("lunar-javascript");
 
@@ -64,7 +62,6 @@ function makeDaewoon(eightChar, gender) {
   try {
     const genderCode = gender === "남자" ? 1 : 0;
     const yun = eightChar.getYun(genderCode);
-
     const list = yun.getDaYun().slice(1, 9).map(d => ({
       startAge: d.getStartAge(),
       endAge: d.getStartAge() + 9,
@@ -130,15 +127,13 @@ app.post("/analyze", async (req, res) => {
 월주:${raw.month}
 일주:${raw.day}
 시주:${raw.hour}
-
 대운:${JSON.stringify(daewoon)}
 세운:${JSON.stringify(sewoon)}
-
 프리미엄 리포트 작성
 `,
         },
       ],
-      max_tokens: 2000,
+      max_tokens: 3000,
     });
 
     res.json({
@@ -147,9 +142,8 @@ app.post("/analyze", async (req, res) => {
       daewoon,
       sewoon,
     });
-
   } catch (e) {
-    console.error("🔥 분석 에러:", e);
+    console.error(e);
     res.status(500).json({ error: "분석 오류" });
   }
 });
@@ -172,22 +166,20 @@ app.post("/verify-payment", async (req, res) => {
     });
 
     const data = await response.json();
-    console.log("💳 결제검증:", data);
+    console.log("결제검증:", data);
 
     res.json({ ok: true });
-
   } catch (e) {
-    console.error("❌ 결제검증 에러:", e);
+    console.error(e);
     res.status(500).json({ ok: false });
   }
 });
 
 
-// ================= 기본 =================
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
 app.listen(PORT, () => {
-  console.log("🚀 서버 실행:", PORT);
+  console.log("서버 실행:", PORT);
 });
