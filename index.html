@@ -2,69 +2,201 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>사주전쟁</title>
+  <title>사주전쟁 | SAJUWAR</title>
   <style>
     *{box-sizing:border-box}
-    body{margin:0;background:radial-gradient(circle at top,#1b1b1b,#070707 70%);color:#f7f1df;font-family:Arial,"Noto Sans KR",sans-serif;padding:24px}
-    .app{max-width:920px;margin:auto}
-    .box{background:linear-gradient(145deg,#1b1b1b,#101010);border:1px solid rgba(212,175,55,.55);border-radius:22px;padding:26px;margin:20px 0;box-shadow:0 0 32px rgba(212,175,55,.08)}
-    .hero{text-align:center;padding:44px 24px}
-    h1,h2,h3{color:#d4af37}
-    h1{font-size:38px;margin:0 0 14px}
-    input,select,button{width:100%;padding:15px;margin:7px 0;border-radius:13px;border:1px solid rgba(212,175,55,.45);box-sizing:border-box;font-size:16px}
-    input,select{background:#0d0d0d;color:#fff}
-    button{background:linear-gradient(135deg,#d4af37,#f4dc8a);font-weight:900;cursor:pointer;color:#111;border:none}
-    button.secondary{background:#2b2b2b;color:#d4af37;border:1px solid rgba(212,175,55,.5)}
+    body{
+      margin:0;
+      background:
+        radial-gradient(circle at top,#2a2112,#070707 58%),
+        linear-gradient(180deg,#050505,#101010);
+      color:#f8f0d8;
+      font-family:Arial,"Noto Sans KR",sans-serif;
+      padding:24px;
+    }
+    .app{max-width:1320px;margin:auto}
+    .top{
+      display:flex;justify-content:space-between;align-items:center;
+      border:1px solid rgba(212,175,55,.55);
+      border-radius:22px;padding:22px 28px;margin-bottom:20px;
+      background:linear-gradient(145deg,#151515,#080808);
+      box-shadow:0 0 38px rgba(212,175,55,.1)
+    }
+    .logo h1{margin:0;color:#d4af37;font-size:36px}
+    .logo p{margin:8px 0 0;color:#e9dca9}
+    .nav span{margin-left:20px;color:#e6d194;font-weight:800}
+
+    .box{
+      background:linear-gradient(145deg,#181818,#0c0c0c);
+      border:1px solid rgba(212,175,55,.45);
+      border-radius:20px;
+      padding:22px;
+      box-shadow:0 0 28px rgba(212,175,55,.06)
+    }
+    .layout{display:grid;grid-template-columns:330px 1fr;gap:20px}
+    .form input,.form select,.form button{
+      width:100%;padding:15px;margin:7px 0;border-radius:13px;
+      border:1px solid rgba(212,175,55,.45);font-size:16px
+    }
+    .form input,.form select{background:#090909;color:#fff}
+    button{
+      background:linear-gradient(135deg,#d4af37,#f6de8a);
+      color:#111;font-weight:900;cursor:pointer;border:none
+    }
+    button.secondary{
+      background:#242424;color:#d4af37;border:1px solid rgba(212,175,55,.55)
+    }
     .row{display:flex;gap:10px}
-    .section-title{font-size:25px;border-bottom:1px solid rgba(212,175,55,.25);padding-bottom:12px;margin-bottom:18px}
-    .report{white-space:pre-wrap;line-height:1.95;font-size:16px}
-    .lock{text-align:center;color:#f4dc8a;font-weight:900;line-height:1.8}
+    .section-title{
+      color:#f3d36b;font-size:24px;margin:0 0 16px;
+      border-bottom:1px solid rgba(212,175,55,.25);padding-bottom:12px
+    }
+    .small{color:#cbbb87;font-size:14px;line-height:1.7}
+    .status{
+      display:flex;align-items:center;gap:14px;margin-top:16px;
+      border-top:1px solid rgba(212,175,55,.2);padding-top:18px
+    }
+    .circle{
+      width:70px;height:70px;border-radius:50%;
+      border:7px solid #d4af37;
+      display:flex;align-items:center;justify-content:center;
+      font-weight:900;color:#ffe48a
+    }
+    .menu-card{
+      padding:16px;border-radius:15px;margin:10px 0;
+      border:1px solid rgba(212,175,55,.25);
+      background:rgba(212,175,55,.06)
+    }
+    .menu-card strong{color:#f5d46d}
+
+    .hero{
+      min-height:230px;
+      background:
+        linear-gradient(90deg,rgba(0,0,0,.88),rgba(0,0,0,.25)),
+        radial-gradient(circle at right,#6b4d17,#161616 60%);
+      display:flex;align-items:center;
+    }
+    .hero h2{font-size:36px;color:#f4d36b;margin:0 0 18px}
+    .hero p{line-height:1.9;font-size:17px;margin:0;color:#f3ead2}
+
+    .dashboard{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-top:18px}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .card{
+      border:1px solid rgba(212,175,55,.38);
+      border-radius:18px;padding:18px;
+      background:rgba(255,255,255,.025)
+    }
+    .card h3{margin:0 0 12px;color:#f1cf64}
+    .badge{
+      display:inline-block;padding:7px 11px;margin:4px;
+      border-radius:999px;background:#2a2412;color:#ffe48a;
+      border:1px solid rgba(212,175,55,.4);font-size:13px
+    }
 
     .manse{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed;text-align:center;overflow:hidden;border-radius:16px;border:1px solid rgba(212,175,55,.55)}
     .manse th,.manse td{border-right:1px solid rgba(212,175,55,.35);border-bottom:1px solid rgba(212,175,55,.25);padding:14px 8px}
     .manse th:last-child,.manse td:last-child{border-right:none}
     .manse tr:last-child td{border-bottom:none}
     .label{width:78px;color:#c8b98a;background:rgba(212,175,55,.08);font-weight:800}
-    .gan{font-size:40px;font-weight:900;color:#ffe48a}
-    .ji{font-size:38px;font-weight:900;color:#e4c764}
+    .gan{font-size:38px;font-weight:900;color:#ffe48a}
+    .ji{font-size:36px;font-weight:900;color:#e4c764}
     .hidden{font-size:15px;line-height:1.6;color:#d8c48a;letter-spacing:1px}
 
-    .battle-card{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.35);border-radius:18px;padding:20px;margin-top:18px}
-    .battle-title{color:#f4dc8a;font-weight:900;font-size:18px;margin-bottom:10px}
-    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#2a2412;color:#ffe48a;border:1px solid rgba(212,175,55,.4);font-size:13px;margin:4px}
-    @media(max-width:700px){.row{flex-direction:column}.gan{font-size:30px}.ji{font-size:28px}}
+    .bar{height:10px;background:#242424;border-radius:99px;overflow:hidden;margin-top:8px}
+    .bar i{display:block;height:100%;background:linear-gradient(90deg,#d4af37,#f5e29b)}
+    .report{
+      white-space:pre-wrap;line-height:2.05;font-size:16px;color:#f7efd9
+    }
+    .lock{
+      text-align:center;color:#f4dc8a;font-weight:900;line-height:1.9;
+      background:linear-gradient(135deg,rgba(212,175,55,.18),rgba(255,255,255,.03))
+    }
+    .loading{
+      padding:40px;text-align:center;color:#f4dc8a;font-size:20px;
+      border:1px solid rgba(212,175,55,.45);border-radius:20px;
+      background:rgba(0,0,0,.35)
+    }
+    @media(max-width:950px){
+      .layout,.dashboard{grid-template-columns:1fr}
+      .grid3{grid-template-columns:1fr}
+      .row{flex-direction:column}
+      .top{display:block}
+      .nav{margin-top:15px}
+      .nav span{display:inline-block;margin:8px 12px 0 0}
+    }
   </style>
 </head>
 
 <body>
 <div class="app">
-  <div class="box hero">
-    <h1>⚔️ 사주전쟁</h1>
-    <p>내 사주 전쟁터 · 병력 구성 · 아이템 해금 시기</p>
+  <div class="top">
+    <div class="logo">
+      <h1>⚔️ 사주전쟁 <span style="font-size:16px">SAJU WAR</span></h1>
+      <p>원국은 전쟁터, 지장간은 아이템, 대운은 스위치입니다.</p>
+    </div>
+    <div class="nav">
+      <span>전쟁지도</span>
+      <span>아이템 분석</span>
+      <span>대운 스위치</span>
+      <span>전략 리포트</span>
+    </div>
   </div>
 
-  <div class="box">
-    <input id="name" placeholder="이름" />
-    <div class="row">
-      <select id="year"></select>
-      <select id="month"></select>
-      <select id="day"></select>
-    </div>
-    <div class="row">
-      <select id="hour"></select>
-      <select id="minute"></select>
-    </div>
-    <select id="gender">
-      <option value="">성별 선택</option>
-      <option value="남자">남자</option>
-      <option value="여자">여자</option>
-    </select>
-    <button onclick="analyze()">전투 분석 시작하기</button>
-    <button class="secondary" onclick="unlock()">결제하고 전체보기</button>
-    <button class="secondary" onclick="downloadPDF()">PDF 저장</button>
-  </div>
+  <div class="layout">
+    <aside>
+      <div class="box form">
+        <h2 class="section-title">전투 정보 입력</h2>
+        <input id="name" placeholder="이름" />
+        <div class="row">
+          <select id="year"></select>
+          <select id="month"></select>
+          <select id="day"></select>
+        </div>
+        <div class="row">
+          <select id="hour"></select>
+          <select id="minute"></select>
+        </div>
+        <select id="gender">
+          <option value="">성별 선택</option>
+          <option value="남자">남자</option>
+          <option value="여자">여자</option>
+        </select>
+        <button onclick="analyze()">전투 분석 시작하기</button>
+        <button class="secondary" onclick="unlock()">결제하고 전체보기</button>
+        <button class="secondary" onclick="downloadPDF()">PDF 저장</button>
 
-  <div id="result"></div>
+        <div class="status">
+          <div class="circle">85%</div>
+          <div>
+            <strong style="color:#f4d36b">분석 진행률</strong>
+            <div class="small">무료 결과는 핵심 전장만 공개됩니다.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box" style="margin-top:18px">
+        <h2 class="section-title">전쟁 요약</h2>
+        <div class="menu-card"><strong>⚔️ 원국</strong><br><span class="small">타고난 전장 구조</span></div>
+        <div class="menu-card"><strong>🎒 지장간</strong><br><span class="small">숨겨진 아이템</span></div>
+        <div class="menu-card"><strong>🔘 대운</strong><br><span class="small">인생 스위치</span></div>
+        <div class="menu-card"><strong>⏱️ 세운</strong><br><span class="small">사용 타이밍</span></div>
+      </div>
+    </aside>
+
+    <main>
+      <div id="result">
+        <div class="box hero">
+          <div>
+            <h2>당신의 전쟁지도는 아직 열리지 않았습니다.</h2>
+            <p>
+              생년월일과 출생시간을 입력하면 원국의 세력, 지장간 아이템,<br>
+              대운 스위치와 세운 타이밍을 사주전쟁 방식으로 분석합니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
 </div>
 
 <script>
@@ -112,67 +244,124 @@ function splitPillar(p){
   return { gan:p ? p[0] : "-", ji:p ? p[1] : "-" };
 }
 
+function getElementStats(p){
+  const keys=["year","month","day","hour"];
+  const count={목:0,화:0,토:0,금:0,수:0};
+  keys.forEach(k=>{
+    const s=splitPillar(p[k]);
+    const e=elementMap[s.gan];
+    if(e) count[e]++;
+  });
+  return count;
+}
+
 function renderPillars(p){
   if(!p) return "";
 
   const cols = [
-    {label:"년", value:p.year},
-    {label:"월", value:p.month},
-    {label:"일", value:p.day},
-    {label:"시", value:p.hour}
+    {label:"년주", value:p.year},
+    {label:"월주", value:p.month},
+    {label:"일주(나)", value:p.day},
+    {label:"시주", value:p.hour}
   ];
 
   const dayGan = splitPillar(p.day).gan;
   const dayElement = elementMap[dayGan] || "-";
+  const stats=getElementStats(p);
 
   return `
-  <div class="box">
-    <h2 class="section-title">1. 사주팔자 원국표</h2>
-    <table class="manse">
-      <tr>
-        <th class="label"></th>
-        ${cols.map(c=>`<th>${c.label}</th>`).join("")}
-      </tr>
-      <tr>
-        <td class="label">천간</td>
-        ${cols.map(c=>`<td class="gan">${splitPillar(c.value).gan}</td>`).join("")}
-      </tr>
-      <tr>
-        <td class="label">지지</td>
-        ${cols.map(c=>`<td class="ji">${splitPillar(c.value).ji}</td>`).join("")}
-      </tr>
-      <tr>
-        <td class="label">지장간</td>
-        ${cols.map(c=>{
-          const ji=splitPillar(c.value).ji;
-          return `<td class="hidden">${hiddenGan[ji] || "-"}</td>`;
-        }).join("")}
-      </tr>
-    </table>
+  <div class="dashboard">
+    <div class="box">
+      <h2 class="section-title">사주 원국 구성</h2>
+      <table class="manse">
+        <tr>
+          <th class="label"></th>
+          ${cols.map(c=>`<th>${c.label}</th>`).join("")}
+        </tr>
+        <tr>
+          <td class="label">천간</td>
+          ${cols.map(c=>`<td class="gan">${splitPillar(c.value).gan}</td>`).join("")}
+        </tr>
+        <tr>
+          <td class="label">지지</td>
+          ${cols.map(c=>`<td class="ji">${splitPillar(c.value).ji}</td>`).join("")}
+        </tr>
+        <tr>
+          <td class="label">지장간</td>
+          ${cols.map(c=>{
+            const ji=splitPillar(c.value).ji;
+            return `<td class="hidden">${hiddenGan[ji] || "-"}</td>`;
+          }).join("")}
+        </tr>
+      </table>
+    </div>
 
-    <div class="battle-card">
-      <div class="battle-title">⚔️ 일간 캐릭터</div>
-      <div>
-        이 사주의 주인공은 <strong>${dayGan}</strong> 일간입니다.
-        중심 속성은 <strong>${dayElement}</strong> 기운입니다.
+    <div class="box">
+      <h2 class="section-title">전장 상태 분석</h2>
+      <div class="card">
+        <h3>일간 캐릭터</h3>
+        <p>이 사주의 주인공은 <strong>${dayGan}</strong> 일간입니다.</p>
+        <p>중심 속성은 <strong>${dayElement}</strong> 기운입니다.</p>
+        <span class="badge">주인공 ${dayGan}</span>
+        <span class="badge">${dayElement} 전장</span>
       </div>
-      <div style="margin-top:12px">
-        <span class="badge">년주 ${p.year}</span>
-        <span class="badge">월주 ${p.month}</span>
-        <span class="badge">일주 ${p.day}</span>
-        <span class="badge">시주 ${p.hour}</span>
+      <div class="card" style="margin-top:12px">
+        <h3>오행 병력</h3>
+        ${Object.entries(stats).map(([k,v])=>`
+          <div>${k} 기운 ${v}</div>
+          <div class="bar"><i style="width:${Math.min(v*25,100)}%"></i></div>
+        `).join("")}
       </div>
     </div>
+  </div>`;
+}
+
+function renderItems(p){
+  if(!p) return "";
+  const jis=["year","month","day","hour"].map(k=>splitPillar(p[k]).ji);
+  const hiddens=jis.map(ji=>hiddenGan[ji] || "-");
+
+  return `
+  <div class="box" style="margin-top:18px">
+    <h2 class="section-title">핵심 아이템, 지장간</h2>
+    <div class="grid3">
+      <div class="card">
+        <h3>💰 재성 아이템</h3>
+        <p>돈, 시장, 현실 자원, 외부 기회를 의미합니다.</p>
+        <span class="badge">돈 아이템</span>
+      </div>
+      <div class="card">
+        <h3>📝 식상 아이템</h3>
+        <p>말, 글, 콘텐츠, 표현, 생산 능력을 의미합니다.</p>
+        <span class="badge">콘텐츠 아이템</span>
+      </div>
+      <div class="card">
+        <h3>🛡️ 관성 아이템</h3>
+        <p>직업, 자리, 책임, 사회적 신뢰를 의미합니다.</p>
+        <span class="badge">직업 아이템</span>
+      </div>
+    </div>
+    <p class="small" style="margin-top:14px">
+      현재 원국 지장간: ${hiddens.join(" / ")}
+    </p>
   </div>`;
 }
 
 function renderDaewoon(d){
   if(!d || !d.list) return "";
   return `
-  <div class="box">
-    <h2 class="section-title">2. 대운 흐름</h2>
-    <div class="report">${d.startInfo || ""}
-${d.list.map(x=>`${x.startAge}세~${x.endAge}세: ${x.ganji}대운 (${x.startYear}년~${x.endYear}년)`).join("\n")}</div>
+  <div class="box" style="margin-top:18px">
+    <h2 class="section-title">대운 스위치</h2>
+    <p class="small">${d.startInfo || ""}</p>
+    <div class="grid3">
+      ${d.list.map(x=>`
+        <div class="card">
+          <h3>${x.startAge}세~${x.endAge}세</h3>
+          <p style="font-size:24px;color:#ffe48a;font-weight:900">${x.ganji}</p>
+          <p class="small">${x.startYear}년~${x.endYear}년</p>
+        </div>
+      `).join("")}
+    </div>
   </div>`;
 }
 
@@ -205,7 +394,7 @@ async function analyze(){
     return;
   }
 
-  result.innerHTML='<div class="box">⚔️ 전투 분석 중입니다...</div>';
+  result.innerHTML='<div class="loading">⚔️ 전쟁지도 분석 중입니다...<br><span class="small">원국, 지장간 아이템, 대운 스위치를 불러오는 중</span></div>';
 
   try{
     const res=await fetch("/analyze",{
@@ -227,24 +416,41 @@ async function analyze(){
     }
 
     const report=cleanText(data.result);
-    const preview=report.slice(0,750);
+    const preview=report.slice(0,950);
 
     const fullHTML=`
+      <div class="box hero">
+        <div>
+          <h2>${name}님의 전쟁지도</h2>
+          <p>당신의 원국은 고정된 판결문이 아니라, 지금부터 읽어야 할 전략 지도입니다.</p>
+        </div>
+      </div>
       ${renderPillars(data.pillars)}
+      ${renderItems(data.pillars)}
       ${renderDaewoon(data.daewoon)}
-      <div class="box">
-        <h2 class="section-title">3. 프리미엄 전투 해석</h2>
+      <div class="box" style="margin-top:18px">
+        <h2 class="section-title">프리미엄 전투 해석</h2>
         <div class="report">${report}</div>
       </div>`;
 
     const previewHTML=`
+      <div class="box hero">
+        <div>
+          <h2>${name}님의 무료 전쟁지도</h2>
+          <p>무료 결과에서는 원국 구성과 일부 전투 해석만 공개됩니다.</p>
+        </div>
+      </div>
       ${renderPillars(data.pillars)}
+      ${renderItems(data.pillars)}
       ${renderDaewoon(data.daewoon)}
-      <div class="box">
+      <div class="box" style="margin-top:18px">
         <h2 class="section-title">무료 미리보기</h2>
         <div class="report">${preview}...</div>
       </div>
-      <div class="box lock">🔒 숨겨진 아이템과 전체 전투 전략은 결제 후 확인 가능합니다.</div>`;
+      <div class="box lock" style="margin-top:18px">
+        🔒 숨겨진 아이템의 정확한 사용법, 대운 스위치, 세운 타이밍은 전체 리포트에서 공개됩니다.<br>
+        “결제하고 전체보기” 버튼을 누르면 테스트로 전체 내용이 열립니다.
+      </div>`;
 
     lastFullResult=fullHTML;
     result.innerHTML=isPaid ? fullHTML : previewHTML;
