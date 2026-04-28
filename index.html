@@ -179,11 +179,6 @@
       text-align:center;color:#f4dc8a;font-weight:900;line-height:1.9;
       background:linear-gradient(135deg,rgba(212,175,55,.18),rgba(255,255,255,.03))
     }
-    .loading{
-      padding:40px;text-align:center;color:#f4dc8a;font-size:20px;
-      border:1px solid rgba(212,175,55,.45);border-radius:20px;
-      background:rgba(0,0,0,.35)
-    }
     @media(max-width:950px){
       .layout,.dashboard,.grid2{grid-template-columns:1fr}
       .grid3{grid-template-columns:1fr}
@@ -208,7 +203,7 @@
       <span>전쟁지도</span>
       <span>아이템 분석</span>
       <span>대운 스위치</span>
-      <span>전략 리포트</span>
+      <span>세운 타이밍</span>
     </div>
   </div>
 
@@ -365,7 +360,6 @@ const hiddenGan = {
 const elementMap = {
   "甲":"목","乙":"목","丙":"화","丁":"화","戊":"토","己":"토","庚":"금","辛":"금","壬":"수","癸":"수",
   "갑":"목","을":"목","병":"화","정":"화","무":"토","기":"토","경":"금","신":"금","임":"수","계":"수",
-
   "寅":"목","卯":"목","巳":"화","午":"화","辰":"토","戌":"토","丑":"토","未":"토","申":"금","酉":"금","亥":"수","子":"수",
   "인":"목","묘":"목","사":"화","오":"화","진":"토","술":"토","축":"토","미":"토","신":"금","유":"금","해":"수","자":"수"
 };
@@ -381,7 +375,6 @@ const itemInfo = {
   "辛": { element:"금", name:"정교함 아이템", desc:"디자인, 미감, 전문성, 브랜드 고급화" },
   "壬": { element:"수", name:"흐름 아이템", desc:"정보, 유통, 이동, 네트워크, 큰 흐름을 타는 힘" },
   "癸": { element:"수", name:"지혜 아이템", desc:"학습, 분석, 상담, 숨은 지식, 직관" },
-
   "갑": { element:"목", name:"성장 아이템", desc:"시작, 기획, 교육, 확장, 새 판을 여는 힘" },
   "을": { element:"목", name:"섬세한 성장 아이템", desc:"관계 조율, 감각, 브랜딩, 꾸준한 확장" },
   "병": { element:"화", name:"태양 아이템", desc:"노출, 인기, 표현, 무대, 사람을 끌어오는 힘" },
@@ -538,7 +531,6 @@ function renderItems(p){
   return `
   <div class="box" style="margin-top:18px">
     <h2 class="section-title">핵심 아이템, 지장간</h2>
-
     <p class="small">
       지장간은 겉으로 드러난 성격이 아니라 원국 안쪽에 숨어 있는 아이템입니다.
       평소에는 잠들어 있다가 대운과 세운이 맞을 때 현실 능력으로 튀어나옵니다.
@@ -582,6 +574,25 @@ function renderDaewoon(d){
           <h3>${x.startAge}세~${x.endAge}세</h3>
           <p style="font-size:24px;color:#ffe48a;font-weight:900">${x.ganji}</p>
           <p class="small">${x.startYear}년~${x.endYear}년</p>
+        </div>
+      `).join("")}
+    </div>
+  </div>`;
+}
+
+function renderSewoon(s){
+  if(!s || !s.list) return "";
+  return `
+  <div class="box" style="margin-top:18px">
+    <h2 class="section-title">세운 타이밍</h2>
+    <p class="small">${s.startInfo || ""}</p>
+    <div class="grid3">
+      ${s.list.map(x=>`
+        <div class="card">
+          <h3>${x.year}년</h3>
+          <p style="font-size:24px;color:#ffe48a;font-weight:900">${x.ganji}</p>
+          <p class="small">천간: ${x.stemElement} / 지지: ${x.branchElement}</p>
+          <p class="small">${x.theme}</p>
         </div>
       `).join("")}
     </div>
@@ -654,6 +665,7 @@ async function analyze(){
       ${renderPillars(data.pillars)}
       ${renderItems(data.pillars)}
       ${renderDaewoon(data.daewoon)}
+      ${renderSewoon(data.sewoon)}
       <div class="box" style="margin-top:18px">
         <h2 class="section-title">프리미엄 전투 해석</h2>
         <div class="report">${report}</div>
@@ -669,6 +681,7 @@ async function analyze(){
       ${renderPillars(data.pillars)}
       ${renderItems(data.pillars)}
       ${renderDaewoon(data.daewoon)}
+      ${renderSewoon(data.sewoon)}
       <div class="box" style="margin-top:18px">
         <h2 class="section-title">무료 미리보기</h2>
         <div class="report">${preview}...</div>
