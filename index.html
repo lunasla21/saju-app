@@ -79,6 +79,73 @@
     .hero h2{font-size:36px;color:#f4d36b;margin:0 0 18px}
     .hero p{line-height:1.9;font-size:17px;margin:0;color:#f3ead2}
 
+    .battle-loading{
+      min-height:520px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      background:
+        radial-gradient(circle at center,rgba(212,175,55,.18),rgba(0,0,0,.15) 35%,rgba(0,0,0,.82) 72%),
+        linear-gradient(145deg,#141414,#050505);
+      overflow:hidden;
+      position:relative;
+    }
+    .battle-loading:before{
+      content:"";
+      position:absolute;
+      width:420px;
+      height:420px;
+      border-radius:50%;
+      border:1px solid rgba(212,175,55,.25);
+      box-shadow:0 0 70px rgba(212,175,55,.12);
+      animation:pulseRing 2s infinite ease-in-out;
+    }
+    .battle-loading:after{
+      content:"⚔️";
+      position:absolute;
+      font-size:160px;
+      opacity:.055;
+      transform:rotate(-15deg);
+    }
+    .loading-content{position:relative;z-index:2}
+    .countdown{
+      margin-top:30px;
+      font-size:110px;
+      font-weight:900;
+      color:#f4d36b;
+      line-height:1;
+      text-shadow:0 0 32px rgba(212,175,55,.6);
+      letter-spacing:-4px;
+    }
+    .loading-line{
+      width:280px;
+      height:8px;
+      margin:26px auto 0;
+      border-radius:999px;
+      background:#242424;
+      overflow:hidden;
+      border:1px solid rgba(212,175,55,.25);
+    }
+    .loading-line i{
+      display:block;
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,#d4af37,#ffe48a);
+      transition:width .8s ease;
+    }
+    .loading-message{
+      margin-top:22px;
+      color:#d8c48a;
+      font-size:18px;
+      line-height:1.8;
+    }
+    @keyframes pulseRing{
+      0%{transform:scale(.92);opacity:.35}
+      50%{transform:scale(1.04);opacity:.9}
+      100%{transform:scale(.92);opacity:.35}
+    }
+
     .dashboard{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-top:18px}
     .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
     .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
@@ -124,6 +191,8 @@
       .top{display:block}
       .nav{margin-top:15px}
       .nav span{display:inline-block;margin:8px 12px 0 0}
+      .countdown{font-size:82px}
+      .battle-loading{min-height:430px}
     }
   </style>
 </head>
@@ -148,6 +217,10 @@
       <div class="box form">
         <h2 class="section-title">전투 정보 입력</h2>
         <input id="name" placeholder="이름" />
+        <select id="calendarType">
+          <option value="solar">양력</option>
+          <option value="lunar">음력</option>
+        </select>
         <div class="row">
           <select id="year"></select>
           <select id="month"></select>
@@ -203,6 +276,7 @@
 <script>
 let isPaid=false;
 let lastFullResult="";
+let loadingTimer=null;
 
 function pad(n){return String(n).padStart(2,"0")}
 
@@ -223,9 +297,61 @@ function fillOptions(){
   for(let m=1;m<=12;m++) month.innerHTML+=`<option value="${pad(m)}">${m}월</option>`;
   for(let d=1;d<=31;d++) day.innerHTML+=`<option value="${pad(d)}">${d}일</option>`;
   for(let h=0;h<=23;h++) hour.innerHTML+=`<option value="${pad(h)}">${h}시</option>`;
-  for(let m=0;m<60;m+=10) minute.innerHTML+=`<option value="${pad(m)}">${m}분</option>`;
+  for(let m=0;m<60;m+=5) minute.innerHTML+=`<option value="${pad(m)}">${m}분</option>`;
 }
 fillOptions();
+
+function startBattleLoading(){
+  if(loadingTimer) clearInterval(loadingTimer);
+
+  const result=document.getElementById("result");
+  let count=10;
+
+  const messages=[
+    "원국의 병력을 소집하고 있습니다.",
+    "지장간 아이템을 탐색하고 있습니다.",
+    "오행 세력의 균형을 계산하고 있습니다.",
+    "대운 스위치를 확인하고 있습니다.",
+    "세운 타이밍의 문을 열고 있습니다.",
+    "전략 리포트의 첫 장을 펼치고 있습니다."
+  ];
+
+  result.innerHTML=`
+    <div class="box battle-loading">
+      <div class="loading-content">
+        <h2>⚔️ 전쟁지도 해금 중...</h2>
+        <p>지금, 당신의 원국 안쪽에 숨어 있던 아이템을 불러옵니다.</p>
+        <div id="countdown" class="countdown">10</div>
+        <div class="loading-line"><i id="loadingBar"></i></div>
+        <div id="loadingText" class="loading-message">전장의 문이 열리고 있습니다.</div>
+      </div>
+    </div>
+  `;
+
+  loadingTimer=setInterval(()=>{
+    count--;
+    const countdown=document.getElementById("countdown");
+    const loadingText=document.getElementById("loadingText");
+    const loadingBar=document.getElementById("loadingBar");
+
+    if(countdown) countdown.textContent=count > 0 ? count : "開";
+    if(loadingText) loadingText.textContent=messages[Math.abs(count)%messages.length];
+    if(loadingBar) loadingBar.style.width=`${Math.min((10-count)*10,100)}%`;
+
+    if(count<=0){
+      clearInterval(loadingTimer);
+      loadingTimer=null;
+      if(loadingText) loadingText.textContent="분석 결과를 정리하고 있습니다.";
+    }
+  },1000);
+}
+
+function stopBattleLoading(){
+  if(loadingTimer){
+    clearInterval(loadingTimer);
+    loadingTimer=null;
+  }
+}
 
 const hiddenGan = {
   "子":"癸", "丑":"己·癸·辛", "寅":"甲·丙·戊", "卯":"乙",
@@ -478,6 +604,7 @@ function unlock(){
 
 async function analyze(){
   const name=document.getElementById("name").value.trim();
+  const calendarType=document.getElementById("calendarType").value;
   const year=document.getElementById("year").value;
   const month=document.getElementById("month").value;
   const day=document.getElementById("day").value;
@@ -486,12 +613,12 @@ async function analyze(){
   const gender=document.getElementById("gender").value;
   const result=document.getElementById("result");
 
-  if(!name || !year || !month || !day || !hour || !minute || !gender){
+  if(!name || !calendarType || !year || !month || !day || !hour || !minute || !gender){
     result.innerHTML='<div class="box">입력 정보를 모두 선택해주세요.</div>';
     return;
   }
 
-  result.innerHTML='<div class="loading">⚔️ 전쟁지도 분석 중입니다...<br><span class="small">원국, 지장간 아이템, 대운 스위치를 불러오는 중</span></div>';
+  startBattleLoading();
 
   try{
     const res=await fetch("/analyze",{
@@ -499,6 +626,7 @@ async function analyze(){
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({
         name,
+        calendarType,
         birth:`${year}-${month}-${day}`,
         time:`${hour}:${minute}`,
         gender
@@ -506,6 +634,7 @@ async function analyze(){
     });
 
     const data=await res.json();
+    stopBattleLoading();
 
     if(!res.ok){
       result.innerHTML=`<div class="box">서버 오류: ${data.result || data.error || "응답 오류"}</div>`;
@@ -553,6 +682,7 @@ async function analyze(){
     result.innerHTML=isPaid ? fullHTML : previewHTML;
 
   }catch(e){
+    stopBattleLoading();
     result.innerHTML=`<div class="box">연결 오류 발생: ${e.message}</div>`;
   }
 }
